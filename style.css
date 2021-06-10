@@ -42,7 +42,7 @@ body {
 .unitClass {
   border-right: 1px solid black;
 }
-#readyButton {
+#startButton {
   position: absolute;
   bottom: 0;
   right: 0;
@@ -51,7 +51,190 @@ body {
   border-left: 1px solid black;
   background-color: brown;
 }
-#readyButton:hover {
+#startButton:hover {
   cursor: pointer;
   background-color: rgb(126, 41, 41);
+}
+#changeTeamButton {
+  position: absolute;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  background-color: rgb(86, 214, 214);
+  overflow: hidden;
+  text-align: center;
+}
+#changeTeamButton:hover {
+  cursor: pointer;
+  background-color: rgb(75, 184, 184);
+}
+#deleteUnit {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+  background-image: url("./images/delete_unit.png");
+  background-size: 100%, 100%;
+}
+
+.price {
+  position: relative;
+  top: -5%;
+  width: 100%;
+  text-align: center;
+}
+#loadingScreen {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(36, 32, 32);
+}
+#loadingSign {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 100px;
+}
+#rect1 {
+  overflow: visible;
+  position: absolute;
+  background-color: rgb(56, 85, 110);
+  border: solid black 2px;
+  animation: rect1Anim 5s infinite;
+}
+#rect2 {
+  position: absolute;
+  background-color: rgb(63, 138, 128);
+  border: solid black 2px;
+  animation: rect2Anim 3s infinite;
+}
+@keyframes rect1Anim {
+  0% {
+    left: 10%;
+    top: 20%;
+    width: 10%;
+    height: 20%;
+    transform: rotate(0deg);
+  }
+  50% {
+    left: 60%;
+    top: 60%;
+    width: 30%;
+    height: 10%;
+    transform: rotate(10deg);
+  }
+  100% {
+    left: 10%;
+    top: 20%;
+    width: 10%;
+    height: 20%;
+    transform: rotate(0deg);
+  }
+}
+@keyframes rect2Anim {
+  0% {
+    left: 10%;
+    top: 20%;
+    width: 10%;
+    height: 20%;
+    transform: rotate(0deg);
+  }
+  50% {
+    left: 60%;
+    top: 60%;
+    width: 80%;
+    height: 70%;
+    transform: rotate(-210deg);
+  }
+  100% {
+    left: 10%;
+    top: 20%;
+    width: 10%;
+    height: 20%;
+    transform: rotate(0deg);
+  }
+}
+.disappear {
+  opacity: 0;
+  transition: 3s;
+}
+#menu {
+  width: 100%;
+  height: 100%;
+}
+#menuLogo {
+  background-color: brown;
+  border: solid black 2px;
+  width: 40%;
+  height: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 5%;
+}
+#menuPlay {
+  background-color: brown;
+  border: solid black 2px;
+  width: 20%;
+  height: 10%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 60%;
+  text-align: center;
+  overflow: hidden;
+}
+#menuCustom {
+  background-color: brown;
+  border: solid black 2px;
+  width: 20%;
+  height: 10%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 80%;
+  text-align: center;
+  overflow: hidden;
+}
+#menuCustom:hover {
+  background-color: rgb(139, 23, 23);
+  cursor: pointer;
+}
+#custom {
+  font-size: 60px;
+  height: 100%;
+  width: 100%;
+}
+#customWidth {
+  background-color: gray;
+  width: 50%;
+  height: 10%;
+}
+#customHeight {
+  background-color: gray;
+  width: 50%;
+  height: 10%;
+  position: absolute;
+  top: 20%;
+}
+#customOkey {
+  position: absolute;
+  top: 40%;
+  background-color: brown;
+  border: 1px solid black;
+}
+#customOkey:hover {
+  background-color: rgb(145, 28, 28);
+  cursor: pointer;
+}
+#customWidthValue {
+  width: 100%;
+  height: 100%;
+  font-size: 60px;
+}
+
+#customHeightValue {
+  width: 100%;
+  height: 100%;
+  font-size: 60px;
 }

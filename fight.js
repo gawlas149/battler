@@ -1,14 +1,12 @@
-import { drawUnits, drawHpBar, drawStaminaBar } from "./map.js"
 import { calulateMove } from "./move.js"
 
 function distance(x1,y1,x2,y2){
     return Math.sqrt( (x1 - x2)**2 + (y1 - y2)**2 )
 }
 
-export function actions(team1,team2,mapHeight,mapWidth,cW,cH){
+export function actions(team1,team2,mapHeight,mapWidth,){
     for(let i=0;i<team1.length;i++){
         team1[i].stamina+=1
-        drawStaminaBar(team1[i].x,team1[i].y,team1[i].speed,team1[i].stamina,mapWidth,mapHeight,cW,cH)
         if (team1[i].stamina>=team1[i].speed){
             team1[i].stamina=0
             let nearestEnemyId=0
@@ -27,21 +25,16 @@ export function actions(team1,team2,mapHeight,mapWidth,cW,cH){
                 team2[nearestEnemyId].hp-=team1[i].dmg 
                 if (team2[nearestEnemyId].hp<=0){
                     team2.splice(nearestEnemyId,1)
-                    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
-                }else{
-                    drawHpBar(team2[nearestEnemyId].x,team2[nearestEnemyId].y,team2[nearestEnemyId].hpMax,team2[nearestEnemyId].hp,mapWidth,mapHeight,cW,cH)
-                }   
+                }
             }else{
                 let newCoords = calulateMove(team1[i],team2[nearestEnemyId],team1.concat(team2),mapWidth,mapHeight)
                 team1[i].x=newCoords[0]
                 team1[i].y=newCoords[1]
-                drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
             }
         }
     }
     for(let i=0;i<team2.length;i++){
         team2[i].stamina+=1
-        drawStaminaBar(team2[i].x,team2[i].y,team2[i].speed,team2[i].stamina,mapWidth,mapHeight,cW,cH)
         if (team2[i].stamina>=team2[i].speed){
             team2[i].stamina=0
             let nearestEnemyId=0
@@ -60,15 +53,11 @@ export function actions(team1,team2,mapHeight,mapWidth,cW,cH){
                 team1[nearestEnemyId].hp-=team2[i].dmg 
                 if (team1[nearestEnemyId].hp<=0){
                     team1.splice(nearestEnemyId,1)
-                    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
-                }else{
-                    drawHpBar(team1[nearestEnemyId].x,team1[nearestEnemyId].y,team1[nearestEnemyId].hpMax,team1[nearestEnemyId].hp,mapWidth,mapHeight,cW,cH)
-                }   
+                } 
             }else{
                 let newCoords = calulateMove(team2[i],team1[nearestEnemyId],team1.concat(team2),mapWidth,mapHeight)
                 team2[i].x=newCoords[0]
                 team2[i].y=newCoords[1]
-                drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
             }
         }
     }

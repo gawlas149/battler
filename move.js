@@ -19,7 +19,7 @@ export function calulateMove(unitMoving,unitTarget,units,mapWidth,mapHeight){
             x=x1+1
             if (isBlocked(blockedFields,x,y,mapWidth,mapHeight)){
                 x=x1
-                if (y1<y2){
+                if (y1<=y2){
                     y=y1+1
                     if (isBlocked(blockedFields,x,y,mapWidth,mapHeight)){
                         y=y1
@@ -36,7 +36,7 @@ export function calulateMove(unitMoving,unitTarget,units,mapWidth,mapHeight){
             x=x1-1
             if (isBlocked(blockedFields,x,y,mapWidth,mapHeight)){
                 x=x1
-                if (y1<y2){
+                if (y1<=y2){
                     y=y1+1
                     if (isBlocked(blockedFields,x,y,mapWidth,mapHeight)){
                         y=y1
