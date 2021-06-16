@@ -1,5 +1,5 @@
 import { calculateClickedCoords } from "./map.js"
-import { resizeGame, drawUnits } from "./map.js";
+import { drawUnits } from "./map.js";
 import { assetsStore } from "./assets.js";
 
 class Unit{
@@ -42,7 +42,6 @@ const minimalizeDiv=document.getElementById("minimalize")
 const startButtonDiv=document.getElementById("startButton")
 const changeTeamButton=document.getElementById("changeTeamButton")
 const deleteUnit=document.getElementById("deleteUnit")
-
 
 export let unitClassesDiv
 export function createUnitClasses(){
@@ -94,13 +93,15 @@ export function createUnitClasses(){
     }
 }
 
-
+let minimalized=0
 export let team1AddingUnits=0
 export let team2AddingUnits=0
 export function startAddingUnits(team,cW,cH,mapWidth,mapHeight,team1,team2){
-    choseUnitsDiv.classList.remove("hidden")
-    startButtonDiv.classList.remove("hidden")
-    minimalizeDiv.classList.remove("hidden")
+    if (minimalized==0){
+        choseUnitsDiv.classList.remove("hidden")
+        startButtonDiv.classList.remove("hidden")
+        minimalizeDiv.classList.remove("hidden")
+    }
     if(team==team1){
         team2AddingUnits=0
         team1AddingUnits=1
@@ -116,7 +117,7 @@ export function startAddingUnits(team,cW,cH,mapWidth,mapHeight,team1,team2){
     let clickedY=0
     canvas.onclick=()=>{}
     canvas.onclick=()=>{
-        let respond=calculateClickedCoords(event,cW,cH,mapWidth,mapHeight)
+        let respond=calculateClickedCoords(event,mapWidth,mapHeight)
         clickedX=respond[0]
         clickedY=respond[1]
 
@@ -155,7 +156,6 @@ function isBlocked(blockedFields,x,y){
     return false 
 }
 
-let minimalized=0
 minimalizeDiv.onclick=()=>{
     if (minimalized==0){
         choseUnitsDiv.classList.add("hidden")

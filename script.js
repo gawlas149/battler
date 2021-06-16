@@ -29,11 +29,6 @@ let cH=0
 let team1=[]    
 let team2=[] 
 
-// let seed=[0,7,7,[[1,3,1],[2,3,2]],[[0,0,0],[0,1,1]]] //custom
-// letseed=[1.......] //mission !!ogarnąć kiedyś
-// let seed=[2,4]  //balanceTest
-let seed=[]
-
 const loadingScreen=document.getElementById("loadingScreen")
 const menu=document.getElementById("menu")
 assetsStore.onload=()=>{
@@ -82,8 +77,8 @@ function startGame(){
 
 function generateSeed(mapWidth,mapHeight,team1,team2){
     let generatedSeed=[0]
-    generatedSeed.push(mapWidth)
-    generatedSeed.push(mapHeight)
+    generatedSeed.push(parseInt(mapWidth))
+    generatedSeed.push(parseInt(mapHeight))
     let seedTeam1=[]
     for(let i=0;i<team1.length;i++){
         seedTeam1.push([team1[i].id,team1[i].x,team1[i].y])
@@ -140,8 +135,7 @@ customButton.onclick=()=>{
 const customOkeyButton=document.getElementById("customOkey")
 const gameArea=document.getElementById("gameArea")
 customOkeyButton.onclick=()=>{
-    let seedValues=generateMap(seed,cW,cH)
-    console.log(cW)
+    let seedValues=generateMap()
     mapWidth=seedValues[0]
     mapHeight=seedValues[1]
     team1=seedValues[2]
@@ -150,14 +144,16 @@ customOkeyButton.onclick=()=>{
     createUnitClasses()
     startAddingUnits(team1,cW,cH,mapWidth,mapHeight,team1,team2)
     drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
-    resizeGame(mapWidth,mapHeight,team1,team2)
 
     custom.classList.add("hidden")
     gameArea.classList.remove("hidden")
 
+    sizes=resizeGame(mapWidth,mapHeight,team1,team2)
+    cW=sizes[0]
+    cH=sizes[1]
+    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
 }
-
-resizeGame(mapWidth,mapHeight,team1,team2)
 
 
 //kupowanie jednostek poprzez przeciąganie a nie tylko klikanie
+//usuwanie jednostek na nowo przelicza staminę

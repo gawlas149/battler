@@ -15,6 +15,8 @@ const menuCustom=document.getElementById("menuCustom")
 const customDiv=document.getElementById("custom")
 const customWidthValue=document.getElementById("customWidthValue")
 const customHeightValue=document.getElementById("customHeightValue")
+const customSeedValue=document.getElementById("customSeedValue")
+
 
 
 export function resizeGame(mapWidth,mapHeight,team1,team2) {
@@ -46,21 +48,20 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
     }
 
     let cW=newWidth;
-    console.log(cW)
 
     let cH=newHeight;
     canvas.width = newWidth;
     canvas.height = newHeight;
 
-    customDiv.style.fontSize=cH/15
-    customWidthValue.style.fontSize=cH/15
-    customHeightValue.style.fontSize=cH/15
+    customDiv.style.fontSize=cH/13
+    customWidthValue.style.fontSize=cH/13
+    customHeightValue.style.fontSize=cH/13
+    customSeedValue.style.fontSize=cH/13
 
   
     gameArea.style.marginTop = -newHeight / 2 + "px";
     gameArea.style.marginLeft = -newWidth / 2 + "px";
 
-    
 
     if(team1AddingUnits==1){
       startAddingUnits(team1,cW,cH,mapWidth,mapHeight,team1,team2)
@@ -155,31 +156,20 @@ function makeMap(mapWidth,mapHeight,cW,cH){
 }
 
 export function drawUnits(team1,team2,mapWidth,mapHeight,cW,cH){
-  let widthToHeight = mapWidth*1.5 / mapHeight;
-  let newWidth = window.innerWidth;
-  let newHeight = window.innerHeight;
-  let newWidthToHeight = newWidth / newHeight;
-  
-  if (newWidthToHeight > widthToHeight) {
-    newWidth = newHeight * widthToHeight;
-    gameArea.style.height = newHeight + "px";
-    gameArea.style.width = newWidth + "px";
-    gameArea.style.borderLeft= "black solid 2px";
-    gameArea.style.borderRight= "black solid 2px";
-    gameArea.style.borderTop= "";
-    gameArea.style.borderBottom= "";
-  } else {
-    newHeight = newWidth / widthToHeight;
-    gameArea.style.width = newWidth + "px";
-    gameArea.style.height = newHeight + "px";
-    gameArea.style.borderTop= "black solid 2px";
-    gameArea.style.borderBottom= "black solid 2px";
-    gameArea.style.borderLeft= "";
-    gameArea.style.borderRight= "";
-  }
+    let widthToHeight = mapWidth*1.5 / mapHeight;
+    let newWidth = window.innerWidth;
+    let newHeight = window.innerHeight;
+    let newWidthToHeight = newWidth / newHeight;
+    
+    if (newWidthToHeight > widthToHeight) {
+      newWidth = newHeight * widthToHeight;
+    } else {
+      newHeight = newWidth / widthToHeight;
+    }
 
-  cW=newWidth;
-  cH=newHeight;
+    cW=newWidth;
+    cH=newHeight;
+  
     clear(cW,cH)
     makeMap(mapWidth,mapHeight,cW,cH)
     for(let i=0;i<team1.length;i++){
@@ -202,16 +192,16 @@ function drawHpBar(x,y,hpMax,hp,mapWidth,mapHeight,cW,cH){
     drawRect(x*cW/mapWidth+cW/mapWidth*0.025,y*cH/mapHeight+cH/mapHeight*0.05+cH/mapHeight*0.9,cW/mapWidth*0.1,-cH/mapHeight*0.9*hpPercent,"red")
 }
 function drawStaminaBar(x,y,speed,stamina,mapWidth,mapHeight,cW,cH){
-  drawRect(x*cW/mapWidth+cW/mapWidth*0.875,y*cH/mapHeight+cH/mapHeight*0.05,cW/mapWidth*0.1,cH/mapHeight*0.9,"white")
-  let staminaPercent=stamina/speed
-  drawRect(x*cW/mapWidth+cW/mapWidth*0.875,y*cH/mapHeight+cH/mapHeight*0.05+cH/mapHeight*0.9,cW/mapWidth*0.1,-cH/mapHeight*0.9*staminaPercent,"yellow")
+    drawRect(x*cW/mapWidth+cW/mapWidth*0.875,y*cH/mapHeight+cH/mapHeight*0.05,cW/mapWidth*0.1,cH/mapHeight*0.9,"white")
+    let staminaPercent=stamina/speed
+    drawRect(x*cW/mapWidth+cW/mapWidth*0.875,y*cH/mapHeight+cH/mapHeight*0.05+cH/mapHeight*0.9,cW/mapWidth*0.1,-cH/mapHeight*0.9*staminaPercent,"yellow")
 }
 
 function drawUnitImage(x,y,mapWidth,mapHeight,cW,cH,imgName){
     drawImage(x*cW/mapWidth+cW/mapWidth*0.2,y*cH/mapHeight+cH/mapHeight*0.05,cH/mapHeight*0.9,cH/mapHeight*0.9,imgName)
 }
 
-export function calculateClickedCoords(event,cW,cH,mapWidth,mapHeight){
+export function calculateClickedCoords(event,mapWidth,mapHeight){
   let widthToHeight = mapWidth*1.5 / mapHeight;
   let newWidth = window.innerWidth;
   let newHeight = window.innerHeight;
@@ -219,24 +209,12 @@ export function calculateClickedCoords(event,cW,cH,mapWidth,mapHeight){
   
   if (newWidthToHeight > widthToHeight) {
     newWidth = newHeight * widthToHeight;
-    gameArea.style.height = newHeight + "px";
-    gameArea.style.width = newWidth + "px";
-    gameArea.style.borderLeft= "black solid 2px";
-    gameArea.style.borderRight= "black solid 2px";
-    gameArea.style.borderTop= "";
-    gameArea.style.borderBottom= "";
   } else {
     newHeight = newWidth / widthToHeight;
-    gameArea.style.width = newWidth + "px";
-    gameArea.style.height = newHeight + "px";
-    gameArea.style.borderTop= "black solid 2px";
-    gameArea.style.borderBottom= "black solid 2px";
-    gameArea.style.borderLeft= "";
-    gameArea.style.borderRight= "";
   }
 
-  cW=newWidth;
-  cH=newHeight;
+  let cW=newWidth;
+  let cH=newHeight;
   let offsetX = event.offsetX;
   let offsetY = event.offsetY;
   let widthField=cW/mapWidth;
