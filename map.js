@@ -8,15 +8,16 @@ const choseUnitsDiv=document.getElementById("choseUnits")
 const minimalize=document.getElementById("minimalize")
 const changeTeamButton=document.getElementById("changeTeamButton")
 const startButton=document.getElementById("startButton")
-const deleteUnit=document.getElementById("deleteUnit")
 const loadingSign=document.getElementById("loadingSign")
 const menuPlay=document.getElementById("menuPlay")
 const menuCustom=document.getElementById("menuCustom")
+const menuLogo=document.getElementById("menuLogo")
 const customDiv=document.getElementById("custom")
 const customWidthValue=document.getElementById("customWidthValue")
 const customHeightValue=document.getElementById("customHeightValue")
 const customSeedValue=document.getElementById("customSeedValue")
-
+const winningScreen=document.getElementById("winningScreen")
+const winningOkey=document.getElementById("winningOkey")
 
 
 export function resizeGame(mapWidth,mapHeight,team1,team2) {
@@ -33,9 +34,6 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
       gameArea.style.borderRight= "black solid 2px";
       gameArea.style.borderTop= "";
       gameArea.style.borderBottom= "";
-
-      
-
     } else {
       newHeight = newWidth / widthToHeight;
       gameArea.style.width = newWidth + "px";
@@ -44,11 +42,9 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
       gameArea.style.borderBottom= "black solid 2px";
       gameArea.style.borderLeft= "";
       gameArea.style.borderRight= "";
-
     }
 
     let cW=newWidth;
-
     let cH=newHeight;
     canvas.width = newWidth;
     canvas.height = newHeight;
@@ -75,6 +71,9 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
     let choseUnitsWidth=cH/7
     const unitsClassDiv=document.getElementsByClassName("unitClass")
     const priceDivs=document.getElementsByClassName("price")
+    const deleteUnit=document.getElementById("deleteUnit")
+
+
     if(cH>=cW){
       minimalize.style.width=cW/12
       minimalize.style.height=cW/18
@@ -87,8 +86,11 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
       changeTeamButton.style.fontSize=cW/20
       changeTeamButton.style.right=cW/12
 
-      deleteUnit.style.width=cW/20
-      deleteUnit.style.height=cW/20
+      if(deleteUnit){
+        deleteUnit.style.width=cW/20
+        deleteUnit.style.height=cW/20
+      }
+
 
       choseUnitsDiv.style.flexDirection="row"
       choseUnitsDiv.style.height=1.28*choseUnitsHeight
@@ -104,9 +106,18 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
       }
       choseUnitsDiv.style.borderRight="solid 1px black"
 
-      loadingSign.style.fontSize=cH/10
-      menuPlay.style.fontSize=cH/20
-      menuCustom.style.fontSize=cH/20
+      loadingSign.style.fontSize=cW/6
+      menuPlay.style.fontSize=cW/12
+      menuCustom.style.fontSize=cW/12
+      menuPlay.style.width=cW/2.5
+      menuCustom.style.width=cW/2.5
+      menuLogo.style.width=cW
+
+      winningScreen.style.fontSize=cW/10
+      winningOkey.style.width=cW/3
+      winningOkey.style.height=cW/9
+      winningOkey.style.fontSize=cW/10
+
     }else{
       minimalize.style.width=cH/10
       minimalize.style.height=cH/15
@@ -119,8 +130,11 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
       changeTeamButton.style.fontSize=cH/17
       changeTeamButton.style.right=cH/10
 
-      deleteUnit.style.width=cH/15
-      deleteUnit.style.height=cH/15
+      if(deleteUnit){     
+        deleteUnit.style.width=cH/15
+        deleteUnit.style.height=cH/15
+      }
+
 
       choseUnitsDiv.style.flexDirection="column"
       choseUnitsDiv.style.height=cH
@@ -136,9 +150,15 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
       }
       choseUnitsDiv.style.borderRight="solid 1px black"
 
-      loadingSign.style.fontSize=cW/12
-      menuPlay.style.fontSize=cW/20
-      menuCustom.style.fontSize=cW/20
+      
+      loadingSign.style.fontSize=cH/10
+      menuPlay.style.fontSize=cH/20
+      menuCustom.style.fontSize=cH/20
+
+      winningScreen.style.fontSize=cH/8
+      winningOkey.style.width=cH/3
+      winningOkey.style.height=cH/8
+      winningOkey.style.fontSize=cH/9
     }
     
 

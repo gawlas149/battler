@@ -2,35 +2,38 @@
     <head>
         <link rel="stylesheet" type="text/css" href="style.css" />
         <meta
-      charset="UTF-8"
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
-    />
+          charset="UTF-8"
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+         />
     </head>
     <body>
+      <div id="loadingScreen" class="">
+        <div id="loadingSign">LOADING</div>
+        <div id="rect1">
+          <div id="rect2"></div>
+        </div>
+    </div>
         <div id="menu" class="hidden">
           <div id="menuLogo">LOGO</div>
-          <div id="menuPlay">PLAY</div>
+          <div id="menuPlay">PLAY (nie)</div>
           <div id="menuCustom">CUSTOM</div>
         </div>
         <div id="custom" class="hidden">
+
           <div id="customWidth"><div id="customWidthSign">Width:</div><input type="number" id="customWidthValue" value="5"></input></div>
           <div id="customHeight"><div id="customHeightSign">Height:</div><input type="number" id="customHeightValue" value="5"></input></div>
           <div id="customSeed"><div id="customSeedSign">Seed:</div><input type="text" id="customSeedValue" value="[]"></input></div>
 
           <div id="customOkey">OKEY</div>
         </div>
-        <div id="loadingScreen">
-            <div id="loadingSign">LOADING</div>
-            <div id="rect1">
-              <div id="rect2"></div>
-            </div>
-        </div>
+        
         <div id="gameArea" class="hidden">
-            <div id="choseUnits"><div id="deleteUnit"></div></div>
+            <div id="choseUnits"></div>
             <div id="startButton">START</div>
             <div id="changeTeamButton">T1</div>
             <div id="minimalize"><div id="minimalizeTxt">-</div></div>
+            <div id="winningScreen" class="hidden"><div id="winningText"></div><div id="winningOkey">OKEY</div></div>
             <canvas id="canvas"></canvas>
         </div>
 

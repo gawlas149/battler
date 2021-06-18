@@ -25,6 +25,10 @@ export function actions(team1,team2,mapHeight,mapWidth,){
                 team2[nearestEnemyId].hp-=team1[i].dmg 
                 if (team2[nearestEnemyId].hp<=0){
                     team2.splice(nearestEnemyId,1)
+
+                    if(team2.length==0){
+                        return 1
+                    }
                 }
             }else{
                 let newCoords = calulateMove(team1[i],team2[nearestEnemyId],team1.concat(team2),mapWidth,mapHeight)
@@ -53,6 +57,10 @@ export function actions(team1,team2,mapHeight,mapWidth,){
                 team1[nearestEnemyId].hp-=team2[i].dmg 
                 if (team1[nearestEnemyId].hp<=0){
                     team1.splice(nearestEnemyId,1)
+
+                    if(team1.length==0){
+                        return 2
+                    }
                 } 
             }else{
                 let newCoords = calulateMove(team2[i],team1[nearestEnemyId],team1.concat(team2),mapWidth,mapHeight)
@@ -61,4 +69,5 @@ export function actions(team1,team2,mapHeight,mapWidth,){
             }
         }
     }
+    return 0
 }

@@ -17,10 +17,10 @@ class Unit{
 }
 
 const warrior=new Unit(0,"warrior",520,140,20,1,75)
-const archer=new Unit(1,"archer",270,80,22,4,125)
+const archer=new Unit(1,"archer",270,60,22,4,125)
 const ironclad=new Unit(2,"ironclad",1250,110,40,1,150)
 const mage=new Unit(3,"mage",190,350,50,2,200)
-const horse=new Unit(4,"horse",720,110,12,1,200)
+const horse=new Unit(4,"horse",720,115,15,1,200)
 
 const units=[warrior,archer,ironclad,mage,horse]
 
@@ -41,9 +41,7 @@ const choseUnitsDiv=document.getElementById("choseUnits")
 const minimalizeDiv=document.getElementById("minimalize")
 const startButtonDiv=document.getElementById("startButton")
 const changeTeamButton=document.getElementById("changeTeamButton")
-const deleteUnit=document.getElementById("deleteUnit")
 
-export let unitClassesDiv
 export function createUnitClasses(){
     for(let i=0; i<units.length;i++){
         const div=document.createElement("div")
@@ -58,7 +56,35 @@ export function createUnitClasses(){
         div.appendChild(price)
         choseUnitsDiv.appendChild(div)
     }
-    unitClassesDiv=document.getElementsByClassName("unitClass")
+    const deleteUnit=document.createElement("div")
+    deleteUnit.setAttribute("id", "deleteUnit");
+    deleteUnit.style.backgroundColor="rgb(66, 122, 52)"
+    choseUnitsDiv.appendChild(deleteUnit)
+    deleteUnit.onclick=()=>{
+        for(let i=0;i<unitClassesDiv.length;i++){
+            unitClassesDiv[i].onmouseover=()=>{
+                unitClassesDiv[i].style.cursor="pointer"
+            }
+        }
+        deleteUnit.onmouseover=()=>{
+            deleteUnit.style.cursor="default"
+        }
+        if(team1AddingUnits==1){
+            if(chosenUnitId!=undefined){
+                unitClassesDiv[chosenUnitId].style.backgroundColor="rgb(102, 167, 86)"
+            }
+            deleteUnit.style.backgroundColor="rgb(66, 122, 52)"
+        }else{
+            if(chosenUnitId!=undefined){
+            unitClassesDiv[chosenUnitId].style.backgroundColor="rgb(134, 92, 86)"
+            }
+            deleteUnit.style.backgroundColor="rgb(107 65 59)"
+    
+        }
+        chosenUnitId=undefined
+    }
+
+    const unitClassesDiv=document.getElementsByClassName("unitClass")
     for(let i=0;i<unitClassesDiv.length;i++){
         unitClassesDiv[i].onmouseover=()=>{
             unitClassesDiv[i].style.cursor="pointer"
@@ -76,14 +102,14 @@ export function createUnitClasses(){
             if(team1AddingUnits==1){
                 for(let j=0;j<unitClassesDiv.length;j++){
                     unitClassesDiv[j].style.backgroundColor="rgb(102, 167, 86)"
-                    deleteUnit.style.backgroundColor="rgb(102, 167, 86)"
                 } 
+                deleteUnit.style.backgroundColor="rgb(102, 167, 86)"
                 unitClassesDiv[i].style.backgroundColor="rgb(66, 122, 52)"
             }else{
                 for(let j=0;j<unitClassesDiv.length;j++){
                     unitClassesDiv[j].style.backgroundColor="rgb(134, 92, 86)"
-                    deleteUnit.style.backgroundColor="rgb(134, 92, 86)"
                 } 
+                deleteUnit.style.backgroundColor="rgb(134, 92, 86)"
                 unitClassesDiv[i].style.backgroundColor="rgb(107 65 59)"
             }
             unitClassesDiv[chosenUnitId].onmouseover=()=>{
@@ -91,6 +117,9 @@ export function createUnitClasses(){
             }
         }
     }
+}
+export function deleteUnitClasses(){
+    choseUnitsDiv.innerHTML=""
 }
 
 let minimalized=0
@@ -130,10 +159,19 @@ export function startAddingUnits(team,cW,cH,mapWidth,mapHeight,team1,team2){
             team.push(createUnit(clickedX,clickedY,chosenUnitId,team.length*2%10)) 
         } else if(chosenUnitId==undefined){
             deleteChosenUnit(clickedX,clickedY,team1,team2,mapWidth,mapHeight,cW,cH)
+            recalculateStamina(team1,team2)
         }
         // resizeGame(mapWidth,mapHeight,team1,team2)
         drawUnits(team1,team2,mapWidth,mapHeight,cW,cH) 
 
+    }
+}
+function recalculateStamina(team1,team2){
+    for(let i=0; i<team1.length;i++){
+        team1[i].stamina=i*2%10
+    }
+    for(let i=0; i<team2.length;i++){
+        team2[i].stamina=i*2%10
     }
 }
 export function stopAddingUnits(){
@@ -168,30 +206,6 @@ minimalizeDiv.onclick=()=>{
         changeTeamButton.classList.remove("hidden")
         minimalized=0
     }
-}
-
-deleteUnit.onclick=()=>{
-    for(let i=0;i<unitClassesDiv.length;i++){
-        unitClassesDiv[i].onmouseover=()=>{
-            unitClassesDiv[i].style.cursor="pointer"
-        }
-    }
-    deleteUnit.onmouseover=()=>{
-        deleteUnit.style.cursor="default"
-    }
-    if(team1AddingUnits==1){
-        if(chosenUnitId!=undefined){
-            unitClassesDiv[chosenUnitId].style.backgroundColor="rgb(102, 167, 86)"
-        }
-        deleteUnit.style.backgroundColor="rgb(66, 122, 52)"
-    }else{
-        if(chosenUnitId!=undefined){
-        unitClassesDiv[chosenUnitId].style.backgroundColor="rgb(134, 92, 86)"
-        }
-        deleteUnit.style.backgroundColor="rgb(107 65 59)"
-
-    }
-    chosenUnitId=undefined
 }
 
 let canDeleteEnemies=1

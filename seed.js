@@ -69,6 +69,9 @@ export function generateMap(){
         
     }else if(seed[0]==1){
         //mission
+        console.log("invalid seed")
+        mapWidth=5
+        mapHeight=5
     }else if(seed[0]==2){
         //balanceTest 
         if(seed.length==2){
@@ -86,13 +89,11 @@ export function generateMap(){
           mapWidth=5
           mapHeight=5
         }
-        
     }else{
       console.log("invalid seed")
       mapWidth=5
       mapHeight=5
     }
-
 
     return [mapWidth,mapHeight,team1,team2]
 }
@@ -100,7 +101,13 @@ export function generateMap(){
 customWidth.onkeypress=()=>{
   customSeed.value="[]"
 }
+customWidth.onchange=()=>{
+  customSeed.value="[]"
+}
 customHeight.onkeypress=()=>{
+  customSeed.value="[]"
+}
+customHeight.onchange=()=>{
   customSeed.value="[]"
 }
 customSeed.onkeypress=()=>{
