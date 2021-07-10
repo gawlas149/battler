@@ -1,6 +1,7 @@
 import { calculateClickedCoords } from "./map.js"
 import { drawUnits } from "./map.js";
 import { assetsStore } from "./assets.js";
+import { mission, cantPlace, moneyMax } from "./script.js";
 
 class Unit{
     constructor(id,name,hpMax,damage,speed,range,price){
@@ -16,11 +17,11 @@ class Unit{
     }
 }
 
-const warrior=new Unit(0,"warrior",520,140,20,1,75)
-const archer=new Unit(1,"archer",270,60,22,4,125)
-const ironclad=new Unit(2,"ironclad",1250,110,40,1,150)
-const mage=new Unit(3,"mage",190,350,50,2,200)
-const horse=new Unit(4,"horse",720,115,15,1,200)
+const warrior=new Unit(0,"warrior",520,80,22,1,75)
+const archer=new Unit(1,"archer",290,65,18,4,125)
+const ironclad=new Unit(2,"ironclad",1250,110,30,1,150)
+const mage=new Unit(3,"mage",250,400,38,2,200)
+const horse=new Unit(4,"horse",720,140,12,1,200)
 
 const units=[warrior,archer,ironclad,mage,horse]
 
@@ -35,15 +36,25 @@ export function createUnit(x,y,classId,staminaDiff){
 }
 
 export let chosenUnitId=undefined
+export let chosenDivId=undefined
 
 const canvas=document.getElementById("canvas")
 const choseUnitsDiv=document.getElementById("choseUnits")
 const minimalizeDiv=document.getElementById("minimalize")
 const startButtonDiv=document.getElementById("startButton")
 const changeTeamButton=document.getElementById("changeTeamButton")
+const teamPrice=document.getElementById("teamPrice")
 
-export function createUnitClasses(){
-    for(let i=0; i<units.length;i++){
+export function createUnitClasses(blockedUnits){
+    chosenDivId=undefined
+    for(let i=0,classDivId=-1; i<units.length;i++){
+        try{        
+            if (blockedUnits.includes(i)){
+                continue
+            }
+        }catch{}
+
+        classDivId+=1
         const div=document.createElement("div")
         div.classList.add("unitClass")
         const image=assetsStore.getImage(units[i].name)
@@ -54,8 +65,45 @@ export function createUnitClasses(){
         price.innerText=units[i].price
         price.classList.add("price")
         div.appendChild(price)
+
+        div.onmouseover=()=>{
+            div.style.cursor="pointer"
+        }
+        div.onclick=()=>{
+            chosenUnitId=i
+            chosenDivId=classDivId
+
+            for(let j=0;j<unitClassesDiv.length;j++){
+                unitClassesDiv[j].onmouseover=()=>{
+                    unitClassesDiv[j].style.cursor="pointer"
+                }
+            }
+            deleteUnit.onmouseover=()=>{
+                deleteUnit.style.cursor="pointer"
+            }
+            if(team1AddingUnits==1){
+                for(let j=0;j<unitClassesDiv.length;j++){
+                    unitClassesDiv[j].style.backgroundColor="rgb(102, 167, 86)"
+                } 
+                deleteUnit.style.backgroundColor="rgb(102, 167, 86)"
+                unitClassesDiv[chosenDivId].style.backgroundColor="rgb(66, 122, 52)"
+                }else{
+                    for(let j=0;j<unitClassesDiv.length;j++){
+                        unitClassesDiv[j].style.backgroundColor="rgb(134, 92, 86)"
+                    } 
+                    deleteUnit.style.backgroundColor="rgb(134, 92, 86)"
+                    unitClassesDiv[chosenDivId].style.backgroundColor="rgb(107 65 59)"
+                }
+                unitClassesDiv[chosenDivId].onmouseover=()=>{
+                    unitClassesDiv[chosenDivId].style.cursor="default"
+                }
+        }
+
         choseUnitsDiv.appendChild(div)
     }
+    let unitClassesDiv=document.getElementsByClassName("unitClass")
+
+
     const deleteUnit=document.createElement("div")
     deleteUnit.setAttribute("id", "deleteUnit");
     deleteUnit.style.backgroundColor="rgb(66, 122, 52)"
@@ -71,51 +119,17 @@ export function createUnitClasses(){
         }
         if(team1AddingUnits==1){
             if(chosenUnitId!=undefined){
-                unitClassesDiv[chosenUnitId].style.backgroundColor="rgb(102, 167, 86)"
+                unitClassesDiv[chosenDivId].style.backgroundColor="rgb(102, 167, 86)"
             }
             deleteUnit.style.backgroundColor="rgb(66, 122, 52)"
         }else{
             if(chosenUnitId!=undefined){
-            unitClassesDiv[chosenUnitId].style.backgroundColor="rgb(134, 92, 86)"
+            unitClassesDiv[chosenDivId].style.backgroundColor="rgb(134, 92, 86)"
             }
             deleteUnit.style.backgroundColor="rgb(107 65 59)"
     
         }
         chosenUnitId=undefined
-    }
-
-    const unitClassesDiv=document.getElementsByClassName("unitClass")
-    for(let i=0;i<unitClassesDiv.length;i++){
-        unitClassesDiv[i].onmouseover=()=>{
-            unitClassesDiv[i].style.cursor="pointer"
-        }
-        unitClassesDiv[i].onclick=()=>{
-            for(let j=0;j<unitClassesDiv.length;j++){
-                unitClassesDiv[j].onmouseover=()=>{
-                    unitClassesDiv[j].style.cursor="pointer"
-                }
-            }
-            deleteUnit.onmouseover=()=>{
-                deleteUnit.style.cursor="pointer"
-            }
-            chosenUnitId=i
-            if(team1AddingUnits==1){
-                for(let j=0;j<unitClassesDiv.length;j++){
-                    unitClassesDiv[j].style.backgroundColor="rgb(102, 167, 86)"
-                } 
-                deleteUnit.style.backgroundColor="rgb(102, 167, 86)"
-                unitClassesDiv[i].style.backgroundColor="rgb(66, 122, 52)"
-            }else{
-                for(let j=0;j<unitClassesDiv.length;j++){
-                    unitClassesDiv[j].style.backgroundColor="rgb(134, 92, 86)"
-                } 
-                deleteUnit.style.backgroundColor="rgb(134, 92, 86)"
-                unitClassesDiv[i].style.backgroundColor="rgb(107 65 59)"
-            }
-            unitClassesDiv[chosenUnitId].onmouseover=()=>{
-                unitClassesDiv[chosenUnitId].style.cursor="default"
-            }
-        }
     }
 }
 export function deleteUnitClasses(){
@@ -135,37 +149,91 @@ export function startAddingUnits(team,cW,cH,mapWidth,mapHeight,team1,team2){
         team2AddingUnits=0
         team1AddingUnits=1
         choseUnitsDiv.style.backgroundColor="rgb(102, 167, 86)"
-
     }else{
         team1AddingUnits=0
         team2AddingUnits=1
         choseUnitsDiv.style.backgroundColor="rgb(134, 92, 86)"
     }
+    teamPrice.innerText=`${recalculateMoney(team)}$`
 
     let clickedX=0
     let clickedY=0
-    canvas.onclick=()=>{}
-    canvas.onclick=()=>{
+    canvas.onmousedown=()=>{}
+    canvas.onmousedown=()=>{
         let respond=calculateClickedCoords(event,mapWidth,mapHeight)
         clickedX=respond[0]
         clickedY=respond[1]
 
-        let units=team1.concat(team2)
+        let unitsAll=team1.concat(team2)
         let blockedFields=[]
-        for (let i=0;i<units.length;i++){
-            blockedFields.push([units[i].x,units[i].y])
+        for (let i=0;i<cantPlace.length;i++){
+            blockedFields.push(cantPlace[i])
         }
-        if(!isBlocked(blockedFields,clickedX,clickedY) && chosenUnitId!=undefined){
+        for (let i=0;i<unitsAll.length;i++){
+            blockedFields.push([unitsAll[i].x,unitsAll[i].y])
+        }
+        console.log(units)
+        if(!isBlocked(blockedFields,clickedX,clickedY) && chosenUnitId!=undefined && recalculateMoney(team)-units[chosenUnitId].price>=0){
             team.push(createUnit(clickedX,clickedY,chosenUnitId,team.length*2%10)) 
+            teamPrice.innerText=`${recalculateMoney(team)}$`
         } else if(chosenUnitId==undefined){
             deleteChosenUnit(clickedX,clickedY,team1,team2,mapWidth,mapHeight,cW,cH)
             recalculateStamina(team1,team2)
+            teamPrice.innerText=`${recalculateMoney(team)}$`
         }
-        // resizeGame(mapWidth,mapHeight,team1,team2)
-        drawUnits(team1,team2,mapWidth,mapHeight,cW,cH) 
+
+        canvas.onmousemove=()=>{
+            let respond=calculateClickedCoords(event,mapWidth,mapHeight)
+            clickedX=respond[0]
+            clickedY=respond[1]
+
+            let units=team1.concat(team2)
+            let blockedFields=[]
+            for (let i=0;i<cantPlace.length;i++){
+                blockedFields.push(cantPlace[i])
+            }
+            for (let i=0;i<units.length;i++){
+                blockedFields.push([units[i].x,units[i].y])
+            }
+            if(!isBlocked(blockedFields,clickedX,clickedY) && chosenUnitId!=undefined && recalculateMoney(team)-units[chosenUnitId].price>=0){
+                team.push(createUnit(clickedX,clickedY,chosenUnitId,team.length*2%10)) 
+                teamPrice.innerText=`${recalculateMoney(team)}$`
+                console.log(recalculateMoney(team))
+            } else if(chosenUnitId==undefined){
+                deleteChosenUnit(clickedX,clickedY,team1,team2,mapWidth,mapHeight,cW,cH)
+                recalculateStamina(team1,team2)
+                teamPrice.innerText=`${recalculateMoney(team)}$`
+            }
+            drawUnits(team1,team2,mapWidth,mapHeight,cW,cH,cantPlace)
+        }
+        canvas.onmouseout=()=>{
+            canvas.onmousemove=()=>{}
+        }
+        canvas.onmouseup=()=>{
+            canvas.onmousemove=()=>{}
+        }
+
+        drawUnits(team1,team2,mapWidth,mapHeight,cW,cH,cantPlace)
 
     }
 }
+function recalculateMoney(team){
+    let money
+    if (mission==false){
+        money=0
+        for(let i=0; i<team.length;i++){
+            money+=team[i].price
+        }
+    }
+    else{
+        money=moneyMax
+        for(let i=0; i<team.length;i++){
+            money-=team[i].price
+        }
+    }
+    return money
+}
+
 function recalculateStamina(team1,team2){
     for(let i=0; i<team1.length;i++){
         team1[i].stamina=i*2%10
@@ -177,11 +245,12 @@ function recalculateStamina(team1,team2){
 export function stopAddingUnits(){
     team1AddingUnits=0
     team2AddingUnits=0
-    canvas.onclick=()=>{}
+    canvas.onmousedown=()=>{}
     minimalizeDiv.classList.add("hidden")
     choseUnitsDiv.classList.add("hidden")
     startButtonDiv.classList.add("hidden")
     changeTeamButton.classList.add("hidden")
+    teamPrice.classList.add("hidden")
 }
 
 function isBlocked(blockedFields,x,y){
@@ -199,29 +268,36 @@ minimalizeDiv.onclick=()=>{
         choseUnitsDiv.classList.add("hidden")
         startButtonDiv.classList.add("hidden")
         changeTeamButton.classList.add("hidden")
+        teamPrice.classList.add("hidden")
         minimalized=1
     }else{
+        if (mission==false){
+            changeTeamButton.classList.remove("hidden")
+        }
         choseUnitsDiv.classList.remove("hidden")
         startButtonDiv.classList.remove("hidden")
-        changeTeamButton.classList.remove("hidden")
+        teamPrice.classList.remove("hidden")
         minimalized=0
     }
 }
 
-let canDeleteEnemies=1
 function deleteChosenUnit(x,y,team1,team2,mapWidth,mapHeight,cW,cH){
     for(let i=0;i<team1.length;i++){
         if(team1[i].x==x && team1[i].y==y){
             team1.splice(i,1)
-            drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
+            drawUnits(team1,team2,mapWidth,mapHeight,cW,cH,cantPlace)
         }
     }
-    if(canDeleteEnemies){
+    if(mission==false){
         for(let i=0;i<team2.length;i++){
             if(team2[i].x==x && team2[i].y==y){
                 team2.splice(i,1)
-                drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
+                drawUnits(team1,team2,mapWidth,mapHeight,cW,cH,cantPlace)
             }
         }
     }
+}
+
+export function resetChosenUnit(){
+    chosenUnitId=undefined
 }

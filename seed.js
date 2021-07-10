@@ -1,8 +1,15 @@
 import { createUnit } from "./units.js"
-// custom seed=[0,7,7,[[1,3,1],[2,3,2]],[[0,0,0],[0,1,1]]]
-// units=[warrior,archer,ironclad,mage,horse]
+// missions=[{width,height,team2,money,blockedUnits,cantPlace}]
+const missions=[{
+  id: 0,
+  width: 5,
+  height: 5,
+  enemies: [[0,0,0]],
+  money: 1000,
+  blockedUnits: [0,3],
+  cantPlace: [[0,1],[3,3]]
+}]
 
-const missions=[{}]
 // balanceTests=[width,height,team1,team2,winningTeam]
 const balanceTests=[
   [5,5,[[1,0,0],[1,4,0]],[[4,2,4]],1],
@@ -16,13 +23,6 @@ const customWidth=document.getElementById("customWidthValue")
 const customHeight=document.getElementById("customHeightValue")
 
 let customSeed=document.getElementById("customSeedValue")
-
-//TESTY
-// let seed=[0,7,7,[[1,3,1],[2,3,2]],[[0,0,0],[0,1,1]]] //custom
-// letseed=[1.......] //mission !!ogarnąć kiedyś
-// let seed=[2,4]  //balanceTest
-// seed to customSeed.value
-// customSeed.value="[2,4]"
 
 export function generateMap(){
     let seed=[]
@@ -39,7 +39,6 @@ export function generateMap(){
       mapHeight=5
       return [mapWidth,mapHeight,team1,team2]
     }
-
     if(seed.length==0){
       mapWidth=parseInt(customWidth.value)
       mapHeight=parseInt(customHeight.value)
@@ -69,12 +68,31 @@ export function generateMap(){
         
     }else if(seed[0]==1){
         //mission
-        console.log("invalid seed")
-        mapWidth=5
-        mapHeight=5
+        // missions=[{width,height,enemies,money,blockedUnits,cantPlace}]
+        if(seed[1]<missions.length){
+
+        let map=missions[seed[1]]
+        mapWidth=map.width
+        mapHeight=map.height
+        for(let i=0;i<map.enemies.length;i++){
+          team2.push(createUnit(map.enemies[i][1],map.enemies[i][2],map.enemies[i][0],team2.length*2%10))
+        }
+        let money=map.money
+        let blockedUnits=map.blockedUnits
+        let cantPlace=map.cantPlace
+        return [mapWidth,mapHeight,team2,money,blockedUnits,cantPlace]
+        }else{
+          console.log("invalid seed")
+          mapWidth=5
+          mapHeight=5
+        }
+
+
+
+        
     }else if(seed[0]==2){
         //balanceTest 
-        if(seed.length==2){
+        if(seed.length==2 && seed[1]<balanceTests.length){
           let map=balanceTests[seed[1]]
           mapWidth=map[0]
           mapHeight=map[1]
@@ -113,4 +131,7 @@ customHeight.onchange=()=>{
 customSeed.onkeypress=()=>{
   customHeight.value=0
   customWidth.value=0
+}
+customSeed.onpaste=(e)=>{
+  customSeed.value=""
 }

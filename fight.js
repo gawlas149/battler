@@ -5,6 +5,13 @@ function distance(x1,y1,x2,y2){
 }
 
 export function actions(team1,team2,mapHeight,mapWidth,){
+    if(team2.length==0){
+        return 1
+    }
+    if(team1.length==0){
+        return 2
+    }
+
     for(let i=0;i<team1.length;i++){
         team1[i].stamina+=1
         if (team1[i].stamina>=team1[i].speed){

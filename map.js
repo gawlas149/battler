@@ -1,5 +1,7 @@
 import { drawLine, drawRect, clear, drawImage } from "./canvasDrawing.js";
 import { startAddingUnits, team1AddingUnits, team2AddingUnits } from "./units.js"
+import { mission, cantPlace } from "./script.js";
+
 
 const gameArea = document.getElementById("gameArea")
 const canvas = document.getElementById("canvas");
@@ -8,6 +10,7 @@ const choseUnitsDiv=document.getElementById("choseUnits")
 const minimalize=document.getElementById("minimalize")
 const changeTeamButton=document.getElementById("changeTeamButton")
 const startButton=document.getElementById("startButton")
+const teamPrice=document.getElementById("teamPrice")
 const loadingSign=document.getElementById("loadingSign")
 const menuPlay=document.getElementById("menuPlay")
 const menuCustom=document.getElementById("menuCustom")
@@ -18,7 +21,7 @@ const customHeightValue=document.getElementById("customHeightValue")
 const customSeedValue=document.getElementById("customSeedValue")
 const winningScreen=document.getElementById("winningScreen")
 const winningOkey=document.getElementById("winningOkey")
-
+const winningSeed=document.getElementById("winningSeed")
 
 export function resizeGame(mapWidth,mapHeight,team1,team2) {
     let widthToHeight = mapWidth*1.5 / mapHeight;
@@ -60,9 +63,9 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
 
 
     if(team1AddingUnits==1){
-      startAddingUnits(team1,cW,cH,mapWidth,mapHeight,team1,team2)
+      startAddingUnits(team1,cW,cH,mapWidth,mapHeight,team1,team2,cantPlace)
     }else if(team2AddingUnits==1){
-      startAddingUnits(team2,cW,cH,mapWidth,mapHeight,team1,team2)
+      startAddingUnits(team2,cW,cH,mapWidth,mapHeight,team1,team2,cantPlace)
     }
 
 
@@ -85,6 +88,20 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
       changeTeamButton.style.height=cW/18
       changeTeamButton.style.fontSize=cW/20
       changeTeamButton.style.right=cW/12
+
+      teamPrice.style.right=cW/6
+      teamPrice.style.height=cW/18
+      teamPrice.style.fontSize=cW/20
+      teamPrice.style.width=cW/8
+
+      try{
+        if(mission==true){
+          changeTeamButton.classList.add("hidden")
+          teamPrice.style.right=cW/12
+        }
+      }catch{}
+
+
 
       if(deleteUnit){
         deleteUnit.style.width=cW/20
@@ -117,6 +134,9 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
       winningOkey.style.width=cW/3
       winningOkey.style.height=cW/9
       winningOkey.style.fontSize=cW/10
+      winningSeed.style.width=cW/3
+      winningSeed.style.height=cW/9
+      winningSeed.style.fontSize=cW/10
 
     }else{
       minimalize.style.width=cH/10
@@ -129,6 +149,18 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
       changeTeamButton.style.height=cH/15
       changeTeamButton.style.fontSize=cH/17
       changeTeamButton.style.right=cH/10
+
+      teamPrice.style.right=cH/5
+      teamPrice.style.height=cH/15
+      teamPrice.style.fontSize=cH/17
+      teamPrice.style.width=cH/5
+
+      try{
+        if(mission==true){
+          changeTeamButton.classList.add("hidden")
+          teamPrice.style.right=cH/10
+        }
+      }catch{}
 
       if(deleteUnit){     
         deleteUnit.style.width=cH/15
@@ -159,6 +191,9 @@ export function resizeGame(mapWidth,mapHeight,team1,team2) {
       winningOkey.style.width=cH/3
       winningOkey.style.height=cH/8
       winningOkey.style.fontSize=cH/9
+      winningSeed.style.width=cH/3
+      winningSeed.style.height=cH/8
+      winningSeed.style.fontSize=cH/9
     }
     
 
@@ -175,7 +210,7 @@ function makeMap(mapWidth,mapHeight,cW,cH){
     }
 }
 
-export function drawUnits(team1,team2,mapWidth,mapHeight,cW,cH){
+export function drawUnits(team1,team2,mapWidth,mapHeight,cW,cH,cantPlace){
     let widthToHeight = mapWidth*1.5 / mapHeight;
     let newWidth = window.innerWidth;
     let newHeight = window.innerHeight;
@@ -192,6 +227,11 @@ export function drawUnits(team1,team2,mapWidth,mapHeight,cW,cH){
   
     clear(cW,cH)
     makeMap(mapWidth,mapHeight,cW,cH)
+
+    if(team1AddingUnits || team2AddingUnits){
+      drawCantPlace(cantPlace,mapWidth,mapHeight,cW,cH)
+    }
+
     for(let i=0;i<team1.length;i++){
       drawRect(team1[i].x*cW/mapWidth,team1[i].y*cH/mapHeight,cW/mapWidth,cH/mapHeight,"rgb(96, 134, 86)")
       drawHpBar(team1[i].x,team1[i].y,team1[i].hpMax,team1[i].hp,mapWidth,mapHeight,cW,cH)
@@ -203,7 +243,13 @@ export function drawUnits(team1,team2,mapWidth,mapHeight,cW,cH){
       drawHpBar(team2[i].x,team2[i].y,team2[i].hpMax,team2[i].hp,mapWidth,mapHeight,cW,cH)
       drawStaminaBar(team2[i].x,team2[i].y,team2[i].speed,team2[i].stamina,mapWidth,mapHeight,cW,cH)
       drawUnitImage(team2[i].x,team2[i].y,mapWidth,mapHeight,cW,cH,team2[i].name)
-  };
+    };
+}
+
+function drawCantPlace(cantPlace,mapWidth,mapHeight,cW,cH){
+  for(let i=0;i<cantPlace.length;i++){
+    drawRect(cantPlace[i][0]*cW/mapWidth,cantPlace[i][1]*cH/mapHeight+cH/(mapHeight*2.5),cW/mapWidth,cH/(mapHeight*5),"red")
+  }
 }
 
 function drawHpBar(x,y,hpMax,hp,mapWidth,mapHeight,cW,cH){

@@ -1,6 +1,6 @@
 //serve
 import { resizeGame, drawUnits } from "./map.js";
-import { startAddingUnits,stopAddingUnits, createUnitClasses, deleteUnitClasses, team1AddingUnits, chosenUnitId, team2AddingUnits } from "./units.js"
+import { startAddingUnits,stopAddingUnits, createUnitClasses, deleteUnitClasses, team1AddingUnits, chosenUnitId, resetChosenUnit, chosenDivId } from "./units.js"
 import { actions } from "./fight.js"
 import { assetsStore } from "./assets.js"
 import { generateMap } from "./seed.js"
@@ -34,7 +34,6 @@ const menu=document.getElementById("menu")
 const customButton=document.getElementById("menuCustom")
 const playButton=document.getElementById("menuPlay")
 
-
 assetsStore.onload=()=>{
     loadingScreen.classList.add("disappear")
     setInterval(() => {
@@ -56,19 +55,20 @@ window.addEventListener("resize", ()=>{
     sizes=resizeGame(mapWidth,mapHeight,team1,team2)
     cW=sizes[0]
     cH=sizes[1]
-    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
+    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH,cantPlace)
 });
 window.addEventListener("orientationchange", ()=>{
     sizes=resizeGame(mapWidth,mapHeight,team1,team2)
     cW=sizes[0]
     cH=sizes[1]
-    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
+    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH,cantPlace)
 });   
 
 let ticks=0;
 let tickInterval
+let seed=[]
 function startGame(){
-    generateSeed(mapWidth,mapHeight,team1,team2)
+    seed=generateSeed(mapWidth,mapHeight,team1,team2)
     ticks=0
     tickInterval=setInterval(() => {
         tick();
@@ -80,7 +80,7 @@ function tick(){
     if (winner==0){
         ticks+=1;
         winner=actions(team1,team2,mapHeight,mapWidth,cW,cH)
-        drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
+        drawUnits(team1,team2,mapWidth,mapHeight,cW,cH,cantPlace)
     }else{
         win(winner)
     }
@@ -105,12 +105,16 @@ function generateSeed(mapWidth,mapHeight,team1,team2){
         seedTeam1.push([team1[i].id,team1[i].x,team1[i].y])
     }
     generatedSeed.push(seedTeam1)
+
     let seedTeam2=[]
     for(let i=0;i<team2.length;i++){
         seedTeam2.push([team2[i].id,team2[i].x,team2[i].y])
     }
     generatedSeed.push(seedTeam2)
+
     console.log(JSON.stringify(generatedSeed))
+
+    return JSON.stringify(generatedSeed)
 }
 
 const startButton=document.getElementById("startButton")
@@ -131,24 +135,24 @@ changeTeamButton.onclick=()=>{
         } 
         deleteUnit.style.backgroundColor="rgb(134, 92, 86)"
         if(chosenUnitId!=undefined){
-        unitClassesDiv[chosenUnitId].style.backgroundColor="rgb(107 65 59)"
+            unitClassesDiv[chosenDivId].style.backgroundColor="rgb(107 65 59)"
         }else{
             deleteUnit.style.backgroundColor="rgb(107, 65, 59)"
         }
         changeTeamButton.innerText="T2"
-        startAddingUnits(team2,cW,cH,mapWidth,mapHeight,team1,team2)
+        startAddingUnits(team2,cW,cH,mapWidth,mapHeight,team1,team2,cantPlace)
     }else{
         for(let i=0;i<unitClassesDiv.length;i++){
             unitClassesDiv[i].style.backgroundColor="rgb(102, 167, 86)"
         } 
         deleteUnit.style.backgroundColor="rgb(102, 167, 86)"
         if(chosenUnitId!=undefined){
-        unitClassesDiv[chosenUnitId].style.backgroundColor="rgb(66, 122, 52)"
+        unitClassesDiv[chosenDivId].style.backgroundColor="rgb(66, 122, 52)"
         }else{
             deleteUnit.style.backgroundColor="rgb(66, 122, 52)"
         }
         changeTeamButton.innerText="T1"
-        startAddingUnits(team1,cW,cH,mapWidth,mapHeight,team1,team2)
+        startAddingUnits(team1,cW,cH,mapWidth,mapHeight,team1,team2,cantPlace)
     }
 }
 
@@ -160,16 +164,38 @@ customButton.onclick=()=>{
 
 const customOkeyButton=document.getElementById("customOkey")
 const gameArea=document.getElementById("gameArea")
+
+export let mission=false
+let blockedUnits=[]
+export let moneyMax=0
+export let cantPlace=[]
+
 customOkeyButton.onclick=()=>{
     let seedValues=generateMap()
-    mapWidth=seedValues[0]
-    mapHeight=seedValues[1]
-    team1=seedValues[2]
-    team2=seedValues[3]
+    mission=false
+    moneyMax=0
+    blockedUnits=[]
+    cantPlace=[]
+    if(seedValues.length==4){
+        mapWidth=seedValues[0]
+        mapHeight=seedValues[1]
+        team1=seedValues[2]
+        team2=seedValues[3]
+    }else{
+        //mission
+        mission=true
+        mapWidth=seedValues[0]
+        mapHeight=seedValues[1]
+        team1=[]
+        team2=seedValues[2]
+        moneyMax=seedValues[3]
+        blockedUnits=seedValues[4]
+        cantPlace=seedValues[5]
+    }
 
-    createUnitClasses()
-    startAddingUnits(team1,cW,cH,mapWidth,mapHeight,team1,team2)
-    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
+    createUnitClasses(blockedUnits)
+    startAddingUnits(team1,cW,cH,mapWidth,mapHeight,team1,team2,cantPlace)
+    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH,cantPlace)
 
     custom.classList.add("hidden")
     gameArea.classList.remove("hidden")
@@ -177,13 +203,15 @@ customOkeyButton.onclick=()=>{
     sizes=resizeGame(mapWidth,mapHeight,team1,team2)
     cW=sizes[0]
     cH=sizes[1]
-    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH)
+    drawUnits(team1,team2,mapWidth,mapHeight,cW,cH,cantPlace)
 }
 
 const winningOkey=document.getElementById("winningOkey")
+const winningSeed=document.getElementById("winningSeed")
 const choseUnitsDiv=document.getElementById("choseUnits")
 const minimalizeDiv=document.getElementById("minimalize")
 const startButtonDiv=document.getElementById("startButton")
+const teamPrice=document.getElementById("teamPrice")
 winningOkey.onclick=()=>{
     winningScreen.classList.add("hidden")
     gameArea.classList.add("hidden")
@@ -193,13 +221,24 @@ winningOkey.onclick=()=>{
     startButtonDiv.classList.remove("hidden")
     minimalizeDiv.classList.remove("hidden")
     changeTeamButton.classList.remove("hidden")
+    teamPrice.classList.remove("hidden")
+
     changeTeamButton.innerText="T1"
+    winningSeed.innerText="Seed"
+
     ticks=0
     winner=0
+    mission=false
     team1=[]
     team2=[]
     mapWidth=3;
     mapHeight=5;
+
+    resetChosenUnit()
     resizeGame(mapWidth,mapHeight,team1,team2)
 }
-//kupowanie jednostek poprzez przeciąganie a nie tylko klikanie
+
+winningSeed.onclick=()=>{
+    navigator.clipboard.writeText(seed)
+    winningSeed.innerText="Copied"
+}

@@ -67,6 +67,15 @@ body {
   cursor: pointer;
   background-color: rgb(75, 184, 184);
 }
+#teamPrice {
+  position: absolute;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  background-color: rgb(86, 214, 214);
+  overflow: hidden;
+  text-align: center;
+  border-right: 1px solid black;
+}
 #deleteUnit {
   position: absolute;
   bottom: 0;
@@ -269,7 +278,24 @@ body {
   position: absolute;
   right: 0;
   bottom: 0;
-  background-color: brown;
+  background-color: rgba(165, 42, 42, 0.9);
   border-left: solid black 2px;
   border-top: solid black 2px;
+}
+#winningOkey:hover {
+  background-color: rgb(145, 28, 28, 0.9);
+  cursor: pointer;
+}
+
+#winningSeed {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(165, 42, 42, 0.9);
+  border-right: solid black 2px;
+  border-top: solid black 2px;
+}
+#winningSeed:hover {
+  background-color: rgb(145, 28, 28, 0.9);
+  cursor: pointer;
 }
