@@ -1,44 +1,68 @@
 <html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="style.css" />
-        <link rel="shortcut icon" href="#">
-        <meta
-          charset="UTF-8"
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
-         />
-    </head>
-    <body>
-      <div id="loadingScreen" class="">
-        <div id="loadingSign">LOADING</div>
-        <div id="rect1">
-          <div id="rect2"></div>
-        </div>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="shortcut icon" href="#">
+  <meta charset="UTF-8" name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+  <!-- <link rel="icon" type="image/png" href="favicon.png"/> -->
+  <title>Battler</title>
+</head>
+
+<body>
+
+  <div id="loadingScreen" class="">
+    <div id="loadingSign">LOADING</div>
+    <div id="rect1">
+      <div id="rect2"></div>
     </div>
-        <div id="menu" class="hidden">
-          <div id="menuLogo">LOGO</div>
-          <div id="menuPlay">PLAY (nie)</div>
-          <div id="menuCustom">CUSTOM</div>
-        </div>
-        <div id="custom" class="hidden">
+  </div>
 
-          <div id="customWidth"><div id="customWidthSign">Width:</div><input type="number" id="customWidthValue" value="5"></input></div>
-          <div id="customHeight"><div id="customHeightSign">Height:</div><input type="number" id="customHeightValue" value="5"></input></div>
-          <div id="customSeed"><div id="customSeedSign">Seed:</div><input type="text" id="customSeedValue" value="[]"></input></div>
+  <div id="menu" class="hidden">
+    <div id="menuLogo">LOGO</div>
+    <div id="menuPlay">PLAY</div>
+    <div id="menuCustom">CUSTOM</div>
+  </div>
 
-          <div id="customOkey">OKEY</div>
-        </div>
-        
-        <div id="gameArea" class="hidden">
-            <div id="choseUnits"></div>
-            <div id="startButton">START</div>
-            <div id="teamPrice">0$</div>
-            <div id="changeTeamButton">T1</div>
-            <div id="minimalize"><div id="minimalizeTxt">-</div></div>
-            <div id="winningScreen" class="hidden"><div id="winningText"></div><div id="winningOkey">OKEY</div><div id="winningSeed">SEED</div></div>
-            <canvas id="canvas"></canvas>
-        </div>
+  <div id="missionScreen" class="hidden">
+    <div id="missionBack"></div>
+  </div>
 
-        <script type="module" src="script.js"></script>
-    </body>
+  <div id="custom" class="hidden">
+    <div id="customWidth">
+      <div id="customWidthSign">Width:</div><input type="number" id="customWidthValue" value="5"></input>
+    </div>
+    <div id="customHeight">
+      <div id="customHeightSign">Height:</div><input type="number" id="customHeightValue" value="5"></input>
+    </div>
+    <div id="customSeed">
+      <div id="customSeedSign">Seed:</div><input type="text" id="customSeedValue" value="[]"></input>
+    </div>
+    <div id="customOkey">OKEY</div>
+    <div id="customBack"></div>
+  </div>
+
+  <div id="gameArea" class="hidden">
+    <div id="choseUnits"></div>
+    <div id="startButton">START</div>
+    <div id="teamPrice">0$</div>
+    <div id="changeTeamButton">T1</div>
+    <div id="minimalize">
+      <div id="minimalizeTxt">-</div>
+    </div>
+
+    <div id="winningScreen" class="hidden">
+      <div id="winningText"></div>
+      <div id="winningOkey">OKEY</div>
+      <div id="winningSeed">SEED</div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+    <div id="gameBack"></div>
+  </div>
+
+
+  <script type="module" src="script.js"></script>
+</body>
+
 </html>
