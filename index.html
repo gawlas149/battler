@@ -52,11 +52,14 @@
     </div>
 
     <div id="winningScreen" class="hidden">
+      <div id="winningBestGold" class="hidden"></div>
+      <div id="winningBestTicks" class="hidden"></div>
       <div id="winningText"></div>
       <div id="winningOkey">OKEY</div>
       <div id="winningSeed">SEED</div>
     </div>
 
+    <div id="recordScreen" class="hidden">NEW RECORD<br />Enter name:<br /><input id="recordName" type="text" maxlength="4" value="XOXO" onkeyup="this.value = this.value.toUpperCase()" oninput="this.value = this.value.replace(/[0-9.]/g, '').replace(/(\..*)\./g, '$1');"><div id="recordButton">OKEY</div></div>
     <canvas id="canvas"></canvas>
     <div id="gameBack"></div>
   </div>

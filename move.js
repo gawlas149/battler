@@ -1,4 +1,4 @@
-export function calulateMove(unitMoving,unitTarget,units,mapWidth,mapHeight){
+export function calculateMove(unitMoving,unitTarget,units,mapWidth,mapHeight){
     let x1=unitMoving.x;
     let y1=unitMoving.y;
     let x=x1

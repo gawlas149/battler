@@ -11,7 +11,6 @@ const minimalize = document.getElementById("minimalize")
 const changeTeamButton = document.getElementById("changeTeamButton")
 const startButton = document.getElementById("startButton")
 const teamPrice = document.getElementById("teamPrice")
-const loadingSign = document.getElementById("loadingSign")
 const menuPlay = document.getElementById("menuPlay")
 const menuCustom = document.getElementById("menuCustom")
 const menuLogo = document.getElementById("menuLogo")
@@ -25,6 +24,10 @@ const winningSeed = document.getElementById("winningSeed")
 const customBack = document.getElementById("customBack")
 const missionBack = document.getElementById("missionBack")
 const gameBack = document.getElementById("gameBack")
+const winningBestGold = document.getElementById("winningBestGold")
+const winningBestTicks = document.getElementById("winningBestTicks")
+const recordScreen = document.getElementById("recordScreen")
+const recordName = document.getElementById("recordName")
 
 
 export function resizeGame(mapWidth, mapHeight, team1, team2) {
@@ -134,7 +137,6 @@ export function resizeGame(mapWidth, mapHeight, team1, team2) {
     }
     choseUnitsDiv.style.borderRight = "solid 1px black"
 
-    loadingSign.style.fontSize = cW / 6
     menuPlay.style.fontSize = cW / 12
     menuCustom.style.fontSize = cW / 12
     menuPlay.style.width = cW / 2.5
@@ -149,14 +151,37 @@ export function resizeGame(mapWidth, mapHeight, team1, team2) {
     winningSeed.style.height = cW / 9
     winningSeed.style.fontSize = cW / 10
 
+    winningBestGold.style.top = cW / 3
+    winningBestGold.style.width = cW / 2.2
+    winningBestGold.style.height = cW / 2.9
+    winningBestGold.style.fontSize = cW / 13
+
+    winningBestTicks.style.top = cW / 3
+    winningBestTicks.style.width = cW / 2.2
+    winningBestTicks.style.height = cW / 2.9
+    winningBestTicks.style.fontSize = cW / 13
+
     const missionSelectDivs = document.getElementsByClassName("missionSelect")
 
     for (let i = 0; i < missionSelectDivs.length; i++) {
       missionSelectDivs[i].style.width = cW / 4
-      missionSelectDivs[i].style.height = missionSelectDivs[i].style.width * 0.5
       missionSelectDivs[i].style.fontSize = cW / 6
-
     }
+
+    const completeCircle = document.getElementsByClassName("completeCircle")
+
+    for (let i = 0; i < completeCircle.length; i++) {
+      try {
+        completeCircle[i].style.width = cW/20
+        completeCircle[i].style.height = cW/15
+        completeCircle[i].style.marginTop = -cW/5.2
+      } catch {}
+    }
+
+    recordScreen.style.fontSize = cW/8
+    recordName.style.height = cW/8
+    recordName.style.width = cW/2
+    recordName.style.fontSize = cW/8
 
 
   } else {
@@ -206,7 +231,6 @@ export function resizeGame(mapWidth, mapHeight, team1, team2) {
     choseUnitsDiv.style.borderRight = "solid 1px black"
 
 
-    loadingSign.style.fontSize = cH / 10
     menuPlay.style.fontSize = cH / 20
     menuCustom.style.fontSize = cH / 20
 
@@ -217,6 +241,22 @@ export function resizeGame(mapWidth, mapHeight, team1, team2) {
     winningSeed.style.width = cH / 3
     winningSeed.style.height = cH / 8
     winningSeed.style.fontSize = cH / 9
+
+    winningBestGold.style.top = cH / 8
+    winningBestGold.style.width = cH / 2.8
+    winningBestGold.style.height = cH / 3
+    winningBestGold.style.fontSize = cH / 14
+
+    winningBestTicks.style.top = cH / 8
+    winningBestTicks.style.width = cH / 2.8
+    winningBestTicks.style.height = cH / 3
+    winningBestTicks.style.fontSize = cH / 14
+
+    recordScreen.style.fontSize = cH/8
+    recordName.style.height = cH/8
+    recordName.style.width = cH/2
+    recordName.style.fontSize = cH/8
+
   }
 
 

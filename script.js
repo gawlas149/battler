@@ -1,9 +1,12 @@
 //serve
 import { resizeGame, drawUnits } from "./map.js";
-import { startAddingUnits, stopAddingUnits, createUnitClasses, deleteUnitClasses, team1AddingUnits, chosenUnitId, resetChosenUnit, chosenDivId } from "./units.js"
+import { startAddingUnits, stopAddingUnits, createUnitClasses, deleteUnitClasses, team1AddingUnits, chosenUnitId, resetChosenUnit, chosenDivId, recalculateMoney } from "./units.js"
 import { actions } from "./fight.js"
 import { assetsStore } from "./assets.js"
 import { generateMap, missions } from "./seed.js"
+
+const url = "http://localhost:3000"
+// const url = "https://08ed-80-51-121-252.ngrok.io"
 
 const imagesToDownload = [{
     name: "warrior",
@@ -104,6 +107,8 @@ missionBack.onclick = () => {
 }
 const gameBack = document.getElementById("gameBack")
 gameBack.onclick = () => {
+    winningBestGold.classList.add("hidden")
+    winningBestTicks.classList.add("hidden")
     if(ticks!=0){
         clearInterval(tickInterval)
         if(mission){
@@ -170,7 +175,7 @@ let winner = 0
 function tick() {
     if (winner == 0) {
         ticks += 1;
-        winner = actions(team1, team2, mapHeight, mapWidth, cW, cH)
+        winner = actions(team1, team2, mapHeight, mapWidth)
         drawUnits(team1, team2, mapWidth, mapHeight, cW, cH, cantPlace)
     } else {
         win(winner)
@@ -180,11 +185,35 @@ function tick() {
 const winningScreen = document.getElementById("winningScreen")
 const winningText = document.getElementById("winningText")
 
+const dane = [[0,"ABCD",111,[],"EFGH",222,[]],[1,"ABCD",111,[],"EFGH",222,[]],[2,"ABCD",111,[],"EFGH",222,[]],[3,"ABCD",111,[],"EFGH",222,[]],[4,"ABCD",111,[],"EFGH",222,[]],[5,"ABCD",111,[],"EFGH",222,[]],[6,"ABCD",111,[],"EFGH",222,[]],[7,"ABCD",111,[],"EFGH",222,[]],[8,"ABCD",111,[],"EFGH",222,[]],[9,"ABCD",111,[],"EFGH",222,[]],[10,"ABCD",111,[],"EFGH",222,[]],[11,"ABCD",111,[],"EFGH",222,[]],]
+
 function win(winner) {
-    winningScreen.classList.remove("hidden")
-    winningText.innerText = `Team${winner} won!`
+    winningBestGold.classList.add("hidden")
+    winningBestTicks.classList.add("hidden")
     clearInterval(tickInterval)
+    winningScreen.classList.remove("hidden")
+    if(mission==false){
+        winningText.innerHTML = `Team${winner} won! <br /> Time: ${ticks}ticks`
+    }else{
+        if(winner==1){
+            winningText.innerHTML = `You won! <br /> Your Gold: ${remainingMoney}$ <br /> Time: ${ticks}ticks`
+            completedMission(startingMissionId)
+            try{
+                requestBestScores(startingMissionId)
+            }catch{console.log("No connection to server")}
+
+        } else{
+            winningText.innerHTML = `You lost :c <br />  Time: ${ticks}ticks`
+            try{
+                requestBestScores(startingMissionId)
+            }catch{console.log("No connection to server")}
+
+        }
+    }
 }
+
+const winningBestGold = document.getElementById("winningBestGold")
+const winningBestTicks = document.getElementById("winningBestTicks")
 
 function generateSeed(mapWidth, mapHeight, team1, team2) {
     let generatedSeed = [0]
@@ -201,15 +230,14 @@ function generateSeed(mapWidth, mapHeight, team1, team2) {
         seedTeam2.push([team2[i].id, team2[i].x, team2[i].y])
     }
     generatedSeed.push(seedTeam2)
-
-//    console.log(JSON.stringify(generatedSeed))
-
     return JSON.stringify(generatedSeed)
 }
 
 const startButton = document.getElementById("startButton")
+let remainingMoney=9999999
 startButton.onclick = () => {
     stopAddingUnits()
+    remainingMoney = recalculateMoney(team1)
     startGame()
 }
 
@@ -305,6 +333,8 @@ const teamPrice = document.getElementById("teamPrice")
 winningOkey.onclick = () => {
     winningScreen.classList.add("hidden")
     gameArea.classList.add("hidden")
+    winningBestGold.classList.add("hidden")
+    winningBestTicks.classList.add("hidden")
 
     if(mission){
         missionScreen.classList.remove("hidden")
@@ -363,6 +393,7 @@ const missionScreen = document.getElementById("missionScreen")
 playButton.onclick = () => {
     missionScreen.classList.remove("hidden")
     menu.classList.add("hidden")
+    resizeGame(mapWidth, mapHeight, team1, team2)
 }
 
 for (let i = 0; i < missions.length; i++) {
@@ -400,5 +431,96 @@ for (let i = 0; i < missions.length; i++) {
 
 }
 
+const missionSelectDivs=document.getElementsByClassName("missionSelect")
 
 
+let missionsCompleted=[]
+if(localStorage.getItem("missionsCompleted") === null || JSON.parse(localStorage.getItem("missionsCompleted")).length != missions.length){
+  for(let i=0; i<missions.length;i++){
+    missionsCompleted.push(0)
+  }
+}else{
+  missionsCompleted = JSON.parse(localStorage.getItem("missionsCompleted"));
+  loadCompleteSymboles()
+}
+
+function completedMission(n){
+  missionsCompleted[n]=1
+  localStorage.setItem("missionsCompleted", JSON.stringify(missionsCompleted));
+  loadCompleteSymboles()
+}
+
+function loadCompleteSymboles(){
+    for(let i=0; i<missionsCompleted.length;i++){
+        missionSelectDivs[i].innerHTML=i+1
+        if(missionsCompleted[i]==1){
+            const div = document.createElement("div")
+            div.classList.add("completeCircle")
+            missionSelectDivs[i].appendChild(div)
+        }
+    }
+}
+
+const recordScreen = document.getElementById("recordScreen")
+let newRecord=false
+function requestBestScores(n){
+    try{
+        fetch(`${url}/getScores`)
+        .then((response) => {
+            return response.json();
+        })    
+        .then((data) => {
+            winningBestGold.innerHTML=`Best Gold:<br /><b>${data[n][2]}$</b><br />By:<br /><b>${data[n][1]}</b>`
+            winningBestTicks.innerHTML=`Fastest Win:<br /><b>${data[n][5]} ticks</b><br />By:<br /><b>${data[n][4]}</b>`
+            winningBestGold.classList.remove("hidden")
+            winningBestTicks.classList.remove("hidden")
+
+            if(winner==1 && (data[n][2]<missions[n].money-recalculateMoney(team1) || data[n][5]>ticks)){
+                newRecord=true
+                winningScreen.classList.add("hidden")
+                recordScreen.classList.remove("hidden")
+            }
+        })
+    }catch{
+        console.log("No connection to server")
+    }
+}
+
+
+
+const recordButton = document.getElementById("recordButton")
+const recordName = document.getElementById("recordName")
+recordButton.onclick = () =>{
+    recordScreen.classList.add("hidden")
+    winningScreen.classList.remove("hidden")
+    if(newRecord){
+        let name=recordName.value
+        if(name=="CHUJ"){
+            name="KUPA"
+        }
+        let team = JSON.parse(seed)[3]
+        team = JSON.stringify(team)
+        let teamGood=""
+        for(let i=0; i<team.length; i++){
+            if(team[i]=="["){
+                teamGood+="@"
+            }else if(team[i]=="]"){
+                teamGood+="!"
+            }else{
+                teamGood+=team[i]
+            }
+        }
+        try{
+            fetch(`${url}/newRecord/${startingMissionId}/${name}/${teamGood}`)
+            .then((response) => {
+                return response.json();
+            })    
+            .then((data) => {
+                winningBestGold.innerHTML=`Best Gold:<br /><b>${data[startingMissionId][2]}$</b><br />By:<br /><b>${data[startingMissionId][1]}</b>`
+                winningBestTicks.innerHTML=`Fastest Win:<br /><b>${data[startingMissionId][5]} ticks</b><br />By:<br /><b>${data[startingMissionId][4]}</b>`
+            })
+        }catch{
+            console.log("No connection to server")
+        }
+    }
+}

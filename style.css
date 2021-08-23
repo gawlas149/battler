@@ -322,7 +322,7 @@ body {
   background-color: rgb(133, 23, 23);
   border: 2px solid black;
   text-align: center;
-  font-size: 1000%;
+  overflow: hidden;
 }
 .missionSelect:hover {
   background-color: rgb(107, 13, 13);
@@ -363,5 +363,60 @@ body {
   background-repeat: no-repeat;
 }
 #gameBack:hover {
+  cursor: pointer;
+}
+
+#winningBestGold {
+  position: absolute;
+  left: 0;
+  background-color: rgba(175, 228, 28, 0.7);
+  border-bottom: 2px solid black;
+  border-top: 2px solid black;
+  border-right: 2px solid black;
+}
+
+#winningBestTicks {
+  position: absolute;
+  right: 0;
+  background-color: rgba(175, 228, 28, 0.7);
+  border-bottom: 2px solid black;
+  border-top: 2px solid black;
+  border-left: 2px solid black;
+}
+
+.completeCircle {
+  position: absolute;
+  background-color: green;
+  border-radius: 45%;
+  border: 1px solid black;
+  margin-bottom: auto;
+}
+
+#recordScreen {
+  background-color: rgba(175, 228, 28, 0.7);
+  width: 100%;
+  height: 65%;
+  position: absolute;
+  top: 20%;
+  text-align: center;
+  font-size: 300%;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+}
+#recordName {
+  text-align: center;
+}
+#recordButton {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-top: 2px solid black;
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+  background-color: rgba(150, 196, 24, 0.7);
+}
+#recordButton:hover {
+  background-color: rgba(115, 151, 14, 0.7);
   cursor: pointer;
 }

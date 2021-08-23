@@ -230,7 +230,7 @@ export function startAddingUnits(team, cW, cH, mapWidth, mapHeight, team1, team2
 
     }
 }
-function recalculateMoney(team) {
+export function recalculateMoney(team) {
     let money
     if (mission == false) {
         money = 0
@@ -255,10 +255,15 @@ function recalculateStamina(team1, team2) {
         team2[i].stamina = i * 2 % 10
     }
 }
+
+const winningBestGold = document.getElementById("winningBestGold")
+const winningBestTicks = document.getElementById("winningBestTicks")
 export function stopAddingUnits() {
     team1AddingUnits = 0
     team2AddingUnits = 0
     canvas.onmousedown = () => { }
+    winningBestGold.classList.add("hidden")
+    winningBestTicks.classList.add("hidden")
     minimalizeDiv.classList.add("hidden")
     choseUnitsDiv.classList.add("hidden")
     startButtonDiv.classList.add("hidden")

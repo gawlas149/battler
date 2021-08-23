@@ -1,10 +1,10 @@
-import { calulateMove } from "./move.js"
+import { calculateMove } from "./move.js"
 
 function distance(x1,y1,x2,y2){
     return Math.sqrt( (x1 - x2)**2 + (y1 - y2)**2 )
 }
 
-export function actions(team1,team2,mapHeight,mapWidth,){
+export function actions(team1,team2,mapHeight,mapWidth){
     if(team2.length==0){
         return 1
     }
@@ -38,7 +38,7 @@ export function actions(team1,team2,mapHeight,mapWidth,){
                     }
                 }
             }else{
-                let newCoords = calulateMove(team1[i],team2[nearestEnemyId],team1.concat(team2),mapWidth,mapHeight)
+                let newCoords = calculateMove(team1[i],team2[nearestEnemyId],team1.concat(team2),mapWidth,mapHeight)
                 team1[i].x=newCoords[0]
                 team1[i].y=newCoords[1]
             }
@@ -70,7 +70,7 @@ export function actions(team1,team2,mapHeight,mapWidth,){
                     }
                 } 
             }else{
-                let newCoords = calulateMove(team2[i],team1[nearestEnemyId],team1.concat(team2),mapWidth,mapHeight)
+                let newCoords = calculateMove(team2[i],team1[nearestEnemyId],team1.concat(team2),mapWidth,mapHeight)
                 team2[i].x=newCoords[0]
                 team2[i].y=newCoords[1]
             }
