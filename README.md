@@ -18,6 +18,6 @@ Units currently avalible:
 -cavalery (very fast)
 
 If player successfully finished a level, game remembers that and shows green dot on level select.
-Also when player finishes a level game sends request to the server about best price and fastest win on that level (server has to be turned on beforehand)
+Also when player finishes a level game sends request to the server about best price and fastest win on that level (server has to be turned on beforehand).
 
 Game saves your progress in local storage.
