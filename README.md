@@ -1,4 +1,4 @@
-battler
+battler (2021)
 
 Link to the game: https://gra-filip149.vercel.app/
 
